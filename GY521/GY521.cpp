@@ -22,7 +22,9 @@ bool GY521::init(int dev, int bit, int calibration){
       }
       cout << "I2C Success" << endl;
     }
-    cout << "NotFound I2C DEVAICE" << endl;
+    else{
+      cout << "NotFound I2C DEVAICE" << endl;
+    }
     return 0;
   }
   else{

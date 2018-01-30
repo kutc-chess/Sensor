@@ -46,7 +46,7 @@ namespace RPGY521{
       }
 
       int gyroRead2(enum RegisterMap RegisterH, enum RegisterMap RegisterL){
-        return (wiringPiI2CReadReg8(I2cId, RegisterH) << 8) + wiringPiI2CReadReg8(I2cId, RegisterL);
+        return (gyroRead(RegisterH) << 8) + gyroRead(RegisterL);
       }
 
       bool gyroWrite(enum RegisterMap Register, int data){
