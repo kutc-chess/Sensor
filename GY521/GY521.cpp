@@ -53,6 +53,7 @@ bool GY521::init(int dev, int bit, int calibration){
 
   //Calibration gyroZAver(deg/s)
 	short gyroZNow;
+  gyroZAver = 0;
   for(int i = 0; i < calibration; i++){
     gyroZNow = gyroRead2(GYRO_ZOUT_H, GYRO_ZOUT_L);
     gyroZAver += gyroZNow;
@@ -71,7 +72,7 @@ double GY521::getYaw(){
   clock_gettime(CLOCK_REALTIME, &now);
   short gyroZNow = gyroRead2(GYRO_ZOUT_H, GYRO_ZOUT_L);
 
-  yaw += ((double)gyroZNow - gyroZAver) / gyroLSB * (now.tv_sec - prev.tv_sec + (now.tv_nsec - prev.tv_nsec) / 1000000000);
+  yaw += ((double)gyroZNow - gyroZAver) / gyroLSB * (now.tv_sec - prev.tv_sec + (long double)(now.tv_nsec - prev.tv_nsec) / 1000000000);
 
   prev = now;
   if(yaw > 180){
