@@ -58,7 +58,7 @@ bool GY521::init(int dev, int bit, int calibration){
     gyroZAver += gyroZNow;
   }
   gyroZAver = gyroZAver / calibration;
-  cout << "Calibration Finish" << endl;
+  cout << "Calibration Finish:" << gyroZAver << endl;
 
   //Gyro init
   gyroWrite(FS_SEL, bit << 3);
