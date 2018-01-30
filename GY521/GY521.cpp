@@ -9,7 +9,7 @@ using namespace std;
 using namespace RPGY521;
 
 GY521::GY521(){
-  init(0x68, 2, 1000);
+  while(init(0x68, 2, 1000) == 0){};
 }
 
 bool GY521::init(int dev, int bit, int calibration){
