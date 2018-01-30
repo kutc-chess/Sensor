@@ -24,8 +24,8 @@ bool GY521::init(int dev, int bit, int calibration){
     }
     else{
       cout << "NotFound I2C DEVAICE" << endl;
+      return 0;
     }
-    return 0;
   }
   else{
     cout << "I2C Failed" << endl;
@@ -58,10 +58,12 @@ bool GY521::init(int dev, int bit, int calibration){
     gyroZAver += gyroZNow;
   }
   gyroZAver = gyroZAver / calibration;
+  cout << "Calibration Finish" << endl;
 
   //Gyro init
   gyroWrite(FS_SEL, bit << 3);
   gyroLSB = LSBMap[bit] / gyroReg;
+  return 1;
 }
 
 

@@ -38,7 +38,7 @@ namespace RPGY521{
       double gyroLSB;
       struct timespec now, prev;
 
-      bool init(int devId, int bit, int calibration);
+      bool init(int dev, int bit, int calibration);
 
       //マクロ的なやつ
       int gyroRead(enum RegisterMap Register){
