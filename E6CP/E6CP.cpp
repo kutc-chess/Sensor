@@ -20,7 +20,7 @@ E6CP::E6CP(int pin[8]){
   for(int i = 0; i < 8; ++i){
     pinMode(absolute[i], INPUT);
   }
-  wiringPiISR(absolute[7], INT_EDGE_BOTH, this->readSpecial);
+  wiringPiISR(absolute[7], INT_EDGE_BOTH, readSpecial());
 }
 
 long E6CP::get(){
