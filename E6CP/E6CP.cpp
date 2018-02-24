@@ -1,7 +1,10 @@
 #include<wiringPi.h>
+#include<thread>
 #include"E6CP.hpp"
 
-E6CP::E6CP(int pin[8]){
+using namespace std;
+
+E6CP::E6CP(int pin[8], bool *flag){
   //Decide PinNumber
   for(int i = 0; i < 8; i++){
     absolute[i] = pin[i];
@@ -20,7 +23,10 @@ E6CP::E6CP(int pin[8]){
   for(int i = 0; i < 8; ++i){
     pinMode(absolute[i], INPUT);
   }
-  wiringPiISR(absolute[7], INT_EDGE_BOTH, readSpecial());
+
+  wait = flag;
+  loopFlag = true;
+  readSpecialThread = thread(&E6CP::readSpecialLoop, this);
 }
 
 long E6CP::get(){
@@ -65,3 +71,15 @@ void E6CP::readSpecial(){
   }
 }
 
+void E6CP::readSpecialLoop(){
+  while(loopFlag){
+    if(*wait){
+      readSpecial();
+    }
+  }
+}
+
+E6CP::~E6CP(){
+  loopFlag = false;
+  readSpecialThread.join();
+}
