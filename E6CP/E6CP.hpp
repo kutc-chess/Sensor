@@ -1,8 +1,9 @@
 #include<thread>
+#include<atomic>
 
 class E6CP{
   public:
-    E6CP(int pin[8], bool *flag);
+    E6CP(int pin[8], std::atomic<bool> *flag);
     long get();
   private:
     unsigned char Change[256] = {};
@@ -12,7 +13,7 @@ class E6CP{
     long totalNow = 0;
     std::thread readSpecialThread;
     void readSpecial();
-    bool *wait;
+    std::atomic<bool> *wait;
     void readSpecialLoop();
     bool loopFlag;
     ~E6CP();

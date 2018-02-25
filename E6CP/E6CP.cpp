@@ -1,10 +1,11 @@
 #include<wiringPi.h>
 #include<thread>
+#include<atomic>
 #include"E6CP.hpp"
 
 using namespace std;
 
-E6CP::E6CP(int pin[8], bool *flag){
+E6CP::E6CP(int pin[8], atomic<bool> *flag){
   //Decide PinNumber
   for(int i = 0; i < 8; i++){
     absolute[i] = pin[i];
@@ -25,6 +26,7 @@ E6CP::E6CP(int pin[8], bool *flag){
   }
 
   wait = flag;
+  wait->store(flag);
   loopFlag = true;
   readSpecialThread = thread(&E6CP::readSpecialLoop, this);
 }
@@ -73,8 +75,9 @@ void E6CP::readSpecial(){
 
 void E6CP::readSpecialLoop(){
   while(loopFlag){
-    if(*wait){
+    if(wait->load()){
       readSpecial();
+      wait->store(false);
     }
   }
 }
