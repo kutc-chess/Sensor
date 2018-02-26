@@ -44,7 +44,7 @@ long E6CP::get(){
 }
 
 void E6CP::offset(long value){
-  totalNow.load(value);
+  totalNow.store(value);
 }
 
 void E6CP::readSpecial(){
