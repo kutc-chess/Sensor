@@ -43,6 +43,10 @@ long E6CP::get(){
   return totalNow;
 }
 
+void E6CP::offset(long value){
+  totalNow.load(value);
+}
+
 void E6CP::readSpecial(){
   static unsigned char rotaryDummy;
   //0 -> 255
