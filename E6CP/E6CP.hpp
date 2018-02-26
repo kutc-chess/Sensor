@@ -12,7 +12,7 @@ class E6CP{
     int absolute[8] = {};
     unsigned char rotaryNow = 0;
     unsigned char rotaryPrev = 0;
-    long totalNow = 0;
+    std::atomic<long> totalNow = 0;
     std::thread readSpecialThread;
     void readSpecial();
     std::atomic<bool> *wait;
