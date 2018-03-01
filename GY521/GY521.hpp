@@ -23,6 +23,7 @@ namespace RPGY521{
     public:
       GY521();
       double getYaw();
+      double diffYaw();
       void resetYaw(){
         yaw = 0;
       }

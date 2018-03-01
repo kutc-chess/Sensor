@@ -43,6 +43,17 @@ long E6CP::get(){
   return totalNow;
 }
 
+long E6CP::diff(){
+  static unsigned char rotaryDummy;
+  rotaryDummy = 0;
+  for(unsigned char i = 0; i < 8; ++i){
+    rotaryDummy += !digitalRead(absolute[i]) << i;
+  }
+  rotaryPrev = rotaryNow;
+  rotaryNow = Change[rotaryDummy];
+  return rotaryNow - rotaryPrev;
+}
+
 void E6CP::offset(long value){
   totalNow.store(value);
 }

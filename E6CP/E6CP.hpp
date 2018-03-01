@@ -5,6 +5,7 @@ class E6CP{
   public:
     E6CP(int pin[8], std::atomic<bool> *flag);
     long get();
+    long diff();
     void offset(long value);
     ~E6CP();
   private:
