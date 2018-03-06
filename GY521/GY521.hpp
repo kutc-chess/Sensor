@@ -24,12 +24,12 @@ namespace RPGY521{
       GY521();
       double getYaw();
       double diffYaw();
-      void resetYaw(){
-        yaw = 0;
+      void resetYaw(double reset){
+        yaw = reset;
       }
       void start(){
-        clock_gettime(CLOCK_REALTIME, &prev);
-        resetYaw();
+        clock_gettime(CLOCK_REALTIME, &now);
+        resetYaw(0);
       }
     private:
       int devId;
