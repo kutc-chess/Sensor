@@ -52,6 +52,10 @@ bool GY521::init(int dev, int bit, int calibration){
   accelZAver = accelZAver / calibration;
   double gyroReg = hypot(hypot(accelXAver, accelYAver), accelZAver) / accelZAver;
 
+  //Gyro init
+  gyroWrite(FS_SEL, bit << 3);
+  gyroLSB = LSBMap[bit] / gyroReg;
+
   //Calibration gyroZAver(deg/s)
 	short gyroZNow;
   gyroZAver = 0;
@@ -61,10 +65,6 @@ bool GY521::init(int dev, int bit, int calibration){
   }
   gyroZAver = gyroZAver / calibration;
   cout << "Calibration Finish:" << gyroZAver << endl;
-
-  //Gyro init
-  gyroWrite(FS_SEL, bit << 3);
-  gyroLSB = LSBMap[bit] / gyroReg;
   return 1;
 }
 
