@@ -19,6 +19,7 @@ bool GY521::init(int dev, int bit, int calibration){
     if(gyroRead(WHO_AM_I) == devId){
       if(gyroRead(PWR_MGMT_1) == 0x40){
         gyroWrite(PWR_MGMT_1, 0x00);
+        cout << "UnLock Sleep" << endl;
       }
       cout << "I2C Success" << endl;
     }
@@ -70,7 +71,7 @@ bool GY521::init(int dev, int bit, int calibration){
 
 double GY521::getYaw(){
   yaw += diffYaw();
-  yaw = fmod(yaw, 360);
+  yaw = fmod(yaw, 180);
   return yaw;
 }
 
