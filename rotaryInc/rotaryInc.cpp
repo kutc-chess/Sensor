@@ -1,7 +1,6 @@
 #include"rotaryInc.hpp"
 #include<pigpio.h>
 #include<iostream>
-#include<atomic>
 
 using namespace std;
 
@@ -26,7 +25,7 @@ rotaryInc::rotaryInc(int userA, int userB, bool precision){
 }
 
 int rotaryInc::get(){
-  return pulse.load();
+  return pulse;
 }
 
 void rotaryInc::rotary(int gpio, int level, uint32_t tick, void *userdata){
@@ -35,10 +34,10 @@ void rotaryInc::rotary(int gpio, int level, uint32_t tick, void *userdata){
   if(gpio == regist->pinA){
     regist->nowA = level;
     if(level){
-      regist->nowB ? ++regist->pulse : --regist->pulse;
+      regist->nowB ? ++(regist->pulse) : --(regist->pulse);
     }
     else{
-      regist->nowB ? --regist->pulse : ++regist->pulse;
+      regist->nowB ? --(regist->pulse) : ++(regist->pulse);
     }
   }
   else{
@@ -47,5 +46,25 @@ void rotaryInc::rotary(int gpio, int level, uint32_t tick, void *userdata){
 }
 
 void rotaryInc::rotaryEx(int gpio, int level, uint32_t tick, void *userdata){
+  rotaryInc *regist = (rotaryInc *)userdata;
+
+  if(gpio == regist->pinA){
+    regist->nowA = level;
+    if(level){
+      regist->nowB ? ++(regist->pulse) : --(regist->pulse);
+    }
+    else{
+      regist->nowB ? --(regist->pulse) : ++(regist->pulse);
+    }
+  }
+  else{
+    regist->nowB = level;
+    if(level){
+      regist->nowB ? ++(regist->pulse) : --(regist->pulse);
+    }
+    else{
+      regist->nowB ? --(regist->pulse) : ++(regist->pulse);
+    }
+  }
 }
 
