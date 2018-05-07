@@ -36,6 +36,20 @@ void rotaryInc::rotary(int gpio, int level, uint32_t tick, void *userdata){
     if(level){
       regist->nowB ? ++(regist->pulse) : --(regist->pulse);
     }
+  }
+  else{
+    regist->nowB = level;
+  }
+}
+
+void rotaryInc::rotaryEx(int gpio, int level, uint32_t tick, void *userdata){
+  rotaryInc *regist = (rotaryInc *)userdata;
+
+  if(gpio == regist->pinA){
+    regist->nowA = level;
+    if(level){
+      regist->nowB ? ++(regist->pulse) : --(regist->pulse);
+    }
     else{
       regist->nowB ? --(regist->pulse) : ++(regist->pulse);
     }
@@ -45,7 +59,8 @@ void rotaryInc::rotary(int gpio, int level, uint32_t tick, void *userdata){
   }
 }
 
-void rotaryInc::rotaryEx(int gpio, int level, uint32_t tick, void *userdata){
+/*
+void rotaryInc::rotaryEEx(int gpio, int level, uint32_t tick, void *userdata){
   rotaryInc *regist = (rotaryInc *)userdata;
 
   if(gpio == regist->pinA){
@@ -67,4 +82,4 @@ void rotaryInc::rotaryEx(int gpio, int level, uint32_t tick, void *userdata){
     }
   }
 }
-
+*/
