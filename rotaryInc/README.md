@@ -1,7 +1,7 @@
 # rotaryInc
 RasPiでインクリメント型ロータリーエンコーダ(2相出力)を使う
 
-# リファレンスのようなもの
+## リファレンスのようなもの
 ```cpp
 rotaryInc::rotaryInc(int userA, int pinB, bool precision)
 ```
