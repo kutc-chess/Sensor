@@ -1,57 +1,55 @@
 #pragma once
-#include<wiringPi.h>
-#include<wiringPiI2C.h>
-#include<time.h>
+#include <pigpio.h>
+#include <time.h>
 
-namespace RPGY521{
-  enum RegisterMap{
-    WHO_AM_I = 0x75,
-    PWR_MGMT_1 = 0x6B,
-    FS_SEL = 0x1B,
-		GYRO_ZOUT_H = 0x47,
-		GYRO_ZOUT_L = 0x48,
-		AFS_SEL = 0x1C,
-		ACCEL_XOUT_H = 0x3B,
-		ACCEL_XOUT_L = 0x3C,
-		ACCEL_YOUT_H = 0x3D,
-		ACCEL_YOUT_L = 0x3E,
-		ACCEL_ZOUT_H = 0x3F,
-		ACCEL_ZOUT_L = 0x40,
-	};
-  constexpr double LSBMap[4] = {131, 65.5, 32.8, 16.4};
-	class GY521{
-    public:
-      GY521();
-      double getYaw();
-      double diffYaw();
-      void resetYaw(double reset){
-        yaw = reset;
-      }
-      void start(){
-        clock_gettime(CLOCK_REALTIME, &now);
-        resetYaw(0);
-      }
-    private:
-      int devId;
-      int I2cId;
-      double yaw;
-      double gyroZAver;
-      double gyroLSB;
-      struct timespec now, prev;
+namespace RPGY521 {
+enum RegisterMap {
+  WHO_AM_I = 0x75,
+  PWR_MGMT_1 = 0x6B,
+  FS_SEL = 0x1B,
+  GYRO_ZOUT_H = 0x47,
+  GYRO_ZOUT_L = 0x48,
+  AFS_SEL = 0x1C,
+  ACCEL_XOUT_H = 0x3B,
+  ACCEL_XOUT_L = 0x3C,
+  ACCEL_YOUT_H = 0x3D,
+  ACCEL_YOUT_L = 0x3E,
+  ACCEL_ZOUT_H = 0x3F,
+  ACCEL_ZOUT_L = 0x40,
+};
+constexpr double LSBMap[4] = {131, 65.5, 32.8, 16.4};
+class GY521 {
+public:
+  GY521();
+  double getYaw();
+  double diffYaw();
+  void resetYaw(double reset) { yaw = reset; }
+  void start() {
+    clock_gettime(CLOCK_REALTIME, &now);
+    resetYaw(0);
+  }
 
-      bool init(int dev, int bit, int calibration);
+private:
+  int devId;
+  int I2cId;
+  double yaw;
+  double gyroZAver;
+  double gyroLSB;
+  struct timespec now, prev;
 
-      //マクロ的なやつ
-      int gyroRead(enum RegisterMap Register){
-        return wiringPiI2CReadReg8(I2cId, Register);
-      }
+  bool init(int dev, int bit, int calibration);
 
-      int gyroRead2(enum RegisterMap RegisterH, enum RegisterMap RegisterL){
-        return (gyroRead(RegisterH) << 8) + gyroRead(RegisterL);
-      }
+  //マクロ的なやつ
+  int gyroRead(enum RegisterMap Register) {
+    return wiringPiI2CReadReg8(I2cId, Register);
+  }
 
-      bool gyroWrite(enum RegisterMap Register, int data){
-        return wiringPiI2CWriteReg8(I2cId, Register, data) == devId ? 1 : 0;
-      }
-  };
+  int gyroRead2(enum RegisterMap RegisterH, enum RegisterMap RegisterL) {
+    return (gyroRead(RegisterH) << 8) + gyroRead(RegisterL);
+  }
+
+  bool gyroWrite(enum RegisterMap Register, int data) {
+    return wiringPiI2CWriteReg8(I2cId, Register, data) == devId ? 1 : 0;
+  }
+};
 };
