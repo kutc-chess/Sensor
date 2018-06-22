@@ -15,7 +15,8 @@ GY521::GY521() {
 bool GY521::init(int dev, int bit, int calibration) {
   // I2C Setup
   devId = dev;
-  if ((I2cId = wiringPiI2CSetup(devId)) > 0) {
+  unsigned int dummyFlag = 0;
+  if ((I2cId = i2cOpen(1, (unsigned int)(devId), dummyFlag)) >= 0) {
     if (gyroRead(WHO_AM_I) == devId) {
       if (gyroRead(PWR_MGMT_1) == 0x40) {
         gyroWrite(PWR_MGMT_1, 0x00);
@@ -81,3 +82,5 @@ double GY521::diffYaw() {
          (now.tv_sec - prev.tv_sec +
           (long double)(now.tv_nsec - prev.tv_nsec) / 1000000000);
 }
+
+GY521::~GY521() { i2cClose(I2cId); }

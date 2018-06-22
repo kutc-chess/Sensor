@@ -28,10 +28,12 @@ public:
     clock_gettime(CLOCK_REALTIME, &now);
     resetYaw(0);
   }
+  ~GY521();
 
 private:
   int devId;
   int I2cId;
+  unsigned int i2cFlag;
   double yaw;
   double gyroZAver;
   double gyroLSB;
@@ -41,7 +43,7 @@ private:
 
   //マクロ的なやつ
   int gyroRead(enum RegisterMap Register) {
-    return wiringPiI2CReadReg8(I2cId, Register);
+    return i2cReadByteData(I2cId, Register);
   }
 
   int gyroRead2(enum RegisterMap RegisterH, enum RegisterMap RegisterL) {
@@ -49,7 +51,7 @@ private:
   }
 
   bool gyroWrite(enum RegisterMap Register, int data) {
-    return wiringPiI2CWriteReg8(I2cId, Register, data) == devId ? 1 : 0;
+    return i2cWriteByteData(I2cId, Register, data) == devId ? 1 : 0;
   }
 };
 };
