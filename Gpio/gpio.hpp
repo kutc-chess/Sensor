@@ -21,7 +21,7 @@ public:
   get_hundle(Port &port, const unsigned char id, const unsigned char cmd)
       : port(port), id(id), cmd(cmd) {}
 
-  void send(const short value) const { port.send(id, cmd, value); }
+  auto send(const short value) const { return port.send(id, cmd, value); }
 };
 
 /* Portの定義を簡単にするやつ */
@@ -43,10 +43,11 @@ class async_serial : public port_base<async_serial> {
 public:
   async_serial(const char *path = "/dev/serial1") : path(path) {}
 
-  void send(const unsigned char id, const unsigned char cmd,
+  bool send(const unsigned char id, const unsigned char cmd,
             const short value) {
     println("[ASYNC_SERIAL]", "path: \"", path, "\"; id: ", +id, "; cmd: ",
             +cmd, "; value: ", value);
+    return true;
   }
 };
 
@@ -56,10 +57,10 @@ class sync_serial : public port_base<sync_serial> {
 public:
   sync_serial(const char *path = "/dev/serial1") : path(path) {}
 
-  void send(const unsigned char id, const unsigned char cmd,
-            const short value) {
+  int send(const unsigned char id, const unsigned char cmd, const short value) {
     println("[SYNC_SERIAL]", "path: \"", path, "\"; id: ", +id, "; cmd: ", +cmd,
             "; value: ", value);
+    return value;
   }
 };
 
