@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 
 #ifndef GPIO_GPIO_HPP
 #define GPIO_GPIO_HPP
@@ -8,10 +9,7 @@ template <class... Ts> void println(Ts... xs) {
   std::cout << std::endl;
 }
 
-/* idとcmdが固定されたやつ */
-/* `send(unsigned char, unsigned char, short)`が実装されてる任意のPortに対応する
- */
-/* `send(short)`を提供する */
+/*出力の下請け*/
 template <class Port> class get_hundle {
   Port &port;
   unsigned char id;
@@ -24,9 +22,7 @@ public:
   auto send(const short value) const { return port.send(id, cmd, value); }
 };
 
-/* Portの定義を簡単にするやつ */
-/* これをpublic継承するとPortからget_hundleを得る`set(id,
- * cmd)`が自動で定義される*/
+/*id, cmdをget_hundleに渡すset関数のテンプレ*/
 template <class T> class port_base {
 public:
   get_hundle<T> set(const unsigned char id, const unsigned char cmd) {
@@ -34,9 +30,9 @@ public:
   }
 };
 
-/* 以下Portの定義例 */
-/* port_base<T>を継承してsendとコンストラクタを実装するだけ */
-/* サンプルなので実装はめっちゃ適当 */
+inline namespace gpio {
+class serial_base {};
+
 class async_serial : public port_base<async_serial> {
   const char *path;
 
@@ -63,26 +59,5 @@ public:
     return value;
   }
 };
-
-class i2c_port : public port_base<i2c_port> {
-public:
-  i2c_port() {}
-
-  void send(const unsigned char id, const unsigned char cmd,
-            const short value) {
-
-    println("[I2C]", "id: ", +id, "; cmd: ", +cmd, "; value: ", value);
-  }
-};
-
-class wifi_port : public port_base<wifi_port> {
-public:
-  wifi_port() {}
-
-  void send(const unsigned char id, const unsigned char cmd,
-            const short value) {
-
-    println("[WI_FI]", "id: ", +id, "; cmd: ", +cmd, "; value: ", value);
-  }
-};
+}
 #endif
