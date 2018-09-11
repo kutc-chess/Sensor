@@ -21,8 +21,9 @@ constexpr double LSBMap[4] = {131, 65.5, 32.8, 16.4};
 class GY521 {
 public:
   GY521();
-  double getYaw();
-  double diffYaw();
+  double yaw;
+  double diffYaw;
+  void GY521::updata(){
   void resetYaw(double reset) { yaw = reset; }
   void start() {
     clock_gettime(CLOCK_REALTIME, &now);
