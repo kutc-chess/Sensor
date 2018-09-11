@@ -28,6 +28,10 @@ public:
     clock_gettime(CLOCK_REALTIME, &now);
     resetYaw(0);
   }
+  void start(double start) {
+    clock_gettime(CLOCK_REALTIME, &now);
+    resetYaw(start);
+  }
   ~GY521();
 
 private:
