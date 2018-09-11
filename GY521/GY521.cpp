@@ -65,22 +65,25 @@ bool GY521::init(int dev, int bit, int calibration) {
   }
   gyroZAver = gyroZAver / calibration;
   cout << "Calibration Finish:" << gyroZAver << endl;
+  yaw = diffYaw = 0;
   return 1;
 }
 
-double GY521::getYaw() {
-  yaw += diffYaw();
-  yaw = fmod(yaw, 180);
-  return yaw;
-}
-
-double GY521::diffYaw() {
+void GY521::updata(){
   short gyroZNow = gyroRead2(GYRO_ZOUT_H, GYRO_ZOUT_L);
   prev = now;
   clock_gettime(CLOCK_REALTIME, &now);
-  return ((double)gyroZNow - gyroZAver) / gyroLSB *
+  diffYaw = ((double)gyroZNow - gyroZAver) / gyroLSB *
          (now.tv_sec - prev.tv_sec +
           (long double)(now.tv_nsec - prev.tv_nsec) / 1000000000);
+  yaw += diffYaw;
+  if(yaw > 180){
+    yaw -= 180;
+  }
+  else if(yaw < -180){
+    yaw += 180;
+  }
+
 }
 
 GY521::~GY521() { i2cClose(I2cId); }
