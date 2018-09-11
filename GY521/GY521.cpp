@@ -8,11 +8,16 @@ using namespace std;
 using namespace RPGY521;
 
 GY521::GY521() {
-  while (init(0x68, 2, 1000) == 0) {
+  while (init(0x68, 2, 1000, 1.0) == 0) {
   };
 }
 
-bool GY521::init(int dev, int bit, int calibration) {
+GY521::GY521(int dev, int bit, int calibration, double userReg) {
+  while (init(dev, bit, calibration, userReg) == 0) {
+  };
+}
+
+bool GY521::init(int dev, int bit, int calibration, double userReg) {
   // I2C Setup
   devId = dev;
   unsigned int dummyFlag = 0;
@@ -54,7 +59,7 @@ bool GY521::init(int dev, int bit, int calibration) {
 
   // Gyro init
   gyroWrite(FS_SEL, bit << 3);
-  gyroLSB = LSBMap[bit] / gyroReg;
+  gyroLSB = LSBMap[bit] / gyroReg / userReg;
 
   // Calibration gyroZAver(deg/s)
   short gyroZNow;
