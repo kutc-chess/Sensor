@@ -24,7 +24,7 @@ public:
   GY521(int dev, int bit, int calibration, double userReg);
   double yaw;
   double diffYaw;
-  void GY521::updata();
+  void updata();
   void resetYaw(double reset) { yaw = reset; }
   void start() {
     clock_gettime(CLOCK_REALTIME, &now);
@@ -40,12 +40,11 @@ private:
   int devId;
   int I2cId;
   unsigned int i2cFlag;
-  double yaw;
   double gyroZAver;
   double gyroLSB;
   struct timespec now, prev;
 
-  bool init(int dev, int bit, int calibration);
+  bool init(int dev, int bit, int calibration, double userReg);
 
   //マクロ的なやつ
   int gyroRead(enum RegisterMap Register) {
