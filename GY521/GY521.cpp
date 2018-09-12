@@ -70,7 +70,12 @@ bool GY521::init(int dev, int bit, int calibration) {
 
 double GY521::getYaw() {
   yaw += diffYaw();
-  yaw = fmod(yaw, 180);
+  if(yaw > 180){
+    yaw -= 360;
+  }
+  else if(yaw <= -180){
+    yaw += 360;
+  }
   return yaw;
 }
 
