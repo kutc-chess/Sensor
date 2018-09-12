@@ -21,7 +21,7 @@ constexpr double LSBMap[4] = {131, 65.5, 32.8, 16.4};
 class GY521 {
 public:
   GY521();
-  GGY521(int dev, int bit, int calibration, double userReg);
+  GY521(int dev, int bit, int calibration, double userReg);
   double yaw;
   double diffYaw;
   void GY521::updata();
