@@ -8,11 +8,16 @@ using namespace std;
 using namespace RPGY521;
 
 GY521::GY521() {
-  while (init(0x68, 2, 1000) == 0) {
+  while (init(0x68, 2, 1000, 1.0) == 0) {
   };
 }
 
-bool GY521::init(int dev, int bit, int calibration) {
+GY521::GY521(int dev, int bit, int calibration, double userReg) {
+  while (init(dev, bit, calibration, userReg) == 0) {
+  };
+}
+
+bool GY521::init(int dev, int bit, int calibration, double userReg) {
   // I2C Setup
   devId = dev;
   unsigned int dummyFlag = 0;
@@ -54,7 +59,7 @@ bool GY521::init(int dev, int bit, int calibration) {
 
   // Gyro init
   gyroWrite(FS_SEL, bit << 3);
-  gyroLSB = LSBMap[bit] / gyroReg;
+  gyroLSB = LSBMap[bit] / gyroReg / userReg;
 
   // Calibration gyroZAver(deg/s)
   short gyroZNow;
@@ -65,27 +70,25 @@ bool GY521::init(int dev, int bit, int calibration) {
   }
   gyroZAver = gyroZAver / calibration;
   cout << "Calibration Finish:" << gyroZAver << endl;
+  yaw = diffYaw = 0;
   return 1;
 }
 
-double GY521::getYaw() {
-  yaw += diffYaw();
-  if(yaw > 180){
-    yaw -= 360;
-  }
-  else if(yaw <= -180){
-    yaw += 360;
-  }
-  return yaw;
-}
-
-double GY521::diffYaw() {
+void GY521::updata(){
   short gyroZNow = gyroRead2(GYRO_ZOUT_H, GYRO_ZOUT_L);
   prev = now;
   clock_gettime(CLOCK_REALTIME, &now);
-  return ((double)gyroZNow - gyroZAver) / gyroLSB *
+  diffYaw = ((double)gyroZNow - gyroZAver) / gyroLSB *
          (now.tv_sec - prev.tv_sec +
           (long double)(now.tv_nsec - prev.tv_nsec) / 1000000000);
+  yaw += diffYaw;
+  if(yaw > 180){
+    yaw -= 180;
+  }
+  else if(yaw < -180){
+    yaw += 180;
+  }
+
 }
 
 GY521::~GY521() { i2cClose(I2cId); }
